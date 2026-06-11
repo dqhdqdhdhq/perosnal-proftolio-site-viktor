@@ -21,13 +21,15 @@ jobs:
       - name: Download Satoshi variable woff2 from Fontshare
         run: |
           mkdir -p _reference/fonts
-          css=$(curl -fsSL -A "Mozilla/5.0" "https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap")
+          css=$(curl -fsSL -A "Mozilla/5.0" "https://api.fontshare.com/v2/css?f[]=satoshi@1,2&display=swap")
           echo "$css" > _reference/fonts/satoshi.css
-          # pull every woff2 URL referenced by the CSS (variable upright + italic)
-          echo "$css" | grep -oE "https://[^)']+\.woff2" | sort -u | while read -r u; do
-            f="_reference/fonts/$(basename "$u")"
-            curl -fsSL -A "Mozilla/5.0" "$u" -o "$f"
-            ls -la "$f"
+          # URLs are protocol-relative (//cdn.fontshare.com/...) — add https:
+          n=0
+          echo "$css" | grep -oE "//[^)']+\.woff2" | sort -u | while read -r u; do
+            n=$((n+1))
+            f="_reference/fonts/satoshi-$n.woff2"
+            curl -fsSL -A "Mozilla/5.0" "https:$u" -o "$f"
+            echo "$u -> $f"; ls -la "$f"
           done
       - name: Commit fonts back
         run: |
