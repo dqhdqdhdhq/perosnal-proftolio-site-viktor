@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   VIKTOR · portfolio — script.js
+   VIKTOR · portfolio v2 — script.js
    Vanilla JS, zero dependencies. Organized as small modules, each
    guarded so a failure in one never takes down the rest.
    ═══════════════════════════════════════════════════════════════ */
@@ -29,12 +29,11 @@
     toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, ms || 2600);
   }
 
-  /* ══ 1. STARFIELD ═════════════════════════════════════════── */
-  var warpPower = 0;     // 0..1, eased by the warp() easter egg
+  /* ══ 1. STARFIELD (dark mode ambience + warp easter egg) ═══─ */
   var warpUntil = 0;
-
   function warp(duration) {
-    warpUntil = performance.now() + (duration || 3200);
+    warpUntil = performance.now() + (duration || 3600);
+    root.classList.add('warping');
   }
 
   safe('starfield', function () {
@@ -42,43 +41,37 @@
     if (!canvas) return;
     var ctx = canvas.getContext('2d');
     var DPR = Math.min(window.devicePixelRatio || 1, 2);
-    var W = 0, H = 0, stars = [], meteors = [];
-    var pointerX = 0.5, pointerY = 0.5, px = 0.5, py = 0.5;
-    var nextMeteor = 2500;
+    var W = 0, H = 0, stars = [];
+    var warpPower = 0;
     var lastT = performance.now();
     var rafId = null;
 
-    var PALETTE = ['#e9edf7', '#e9edf7', '#cfd9ff', '#ffd9a0', '#c4b5fd'];
+    var DARK_PALETTE = ['#f4f1ed', '#f4f1ed', '#e6d8cb', '#f0a47e'];
+    var LIGHT_PALETTE = ['#211e1e', '#211e1e', '#5a4a40', '#e34400'];
+
+    function palette() {
+      return root.getAttribute('data-theme') === 'dark' ? DARK_PALETTE : LIGHT_PALETTE;
+    }
 
     function resize() {
       W = window.innerWidth; H = window.innerHeight;
       canvas.width = W * DPR; canvas.height = H * DPR;
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      var count = clamp(Math.round((W * H) / 9000), 60, 230);
+      var count = clamp(Math.round((W * H) / 16000), 36, 130);
       stars = [];
+      var colors = palette();
       for (var i = 0; i < count; i++) {
         stars.push({
           x: Math.random() * W,
           y: Math.random() * H,
-          z: 0.25 + Math.random() * 0.75,           // depth: far → near
-          r: 0.4 + Math.random() * 1.4,
-          a: 0.25 + Math.random() * 0.75,
+          z: 0.25 + Math.random() * 0.75,
+          r: 0.4 + Math.random() * 1.2,
+          a: 0.2 + Math.random() * 0.6,
           phase: Math.random() * Math.PI * 2,
           tw: 0.4 + Math.random() * 1.4,
-          color: PALETTE[(Math.random() * PALETTE.length) | 0]
+          ci: (Math.random() * colors.length) | 0
         });
       }
-    }
-
-    function spawnMeteor() {
-      var fromLeft = Math.random() > 0.5;
-      meteors.push({
-        x: fromLeft ? -40 : Math.random() * W,
-        y: fromLeft ? Math.random() * H * 0.5 : -40,
-        vx: 6 + Math.random() * 5,
-        vy: 3 + Math.random() * 2.5,
-        life: 1
-      });
     }
 
     function frame(now) {
@@ -86,16 +79,14 @@
       var dt = Math.min((now - lastT) / 16.7, 3);
       lastT = now;
 
-      // warp easing
       var target = now < warpUntil ? 1 : 0;
-      warpPower += (target - warpPower) * 0.04 * dt;
+      warpPower += (target - warpPower) * 0.045 * dt;
+      if (target === 0 && warpPower < 0.02 && root.classList.contains('warping')) {
+        root.classList.remove('warping');
+      }
 
-      px += (pointerX - px) * 0.04 * dt;
-      py += (pointerY - py) * 0.04 * dt;
-
-      var scrollOff = window.scrollY || 0;
+      var colors = palette();
       var cx = W / 2, cy = H / 2;
-
       ctx.clearRect(0, 0, W, H);
 
       for (var i = 0; i < stars.length; i++) {
@@ -113,53 +104,26 @@
           }
         }
 
-        var ox = (px - 0.5) * 30 * s.z;
-        var oy = (py - 0.5) * 20 * s.z - scrollOff * 0.12 * s.z;
-        var sx = s.x + ox;
-        var sy = ((s.y + oy) % H + H) % H;
-
-        var alpha = s.a * (0.62 + 0.38 * Math.sin(now * 0.001 * s.tw + s.phase));
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = s.color;
+        var alpha = s.a * (0.6 + 0.4 * Math.sin(now * 0.001 * s.tw + s.phase));
+        ctx.globalAlpha = alpha * (0.55 + warpPower * 0.45);
+        var color = colors[s.ci % colors.length];
+        ctx.fillStyle = color;
 
         if (warpPower > 0.05) {
-          var ddx = sx - cx, ddy = sy - cy;
+          var ddx = s.x - cx, ddy = s.y - cy;
           var dl = Math.max(Math.hypot(ddx, ddy), 1);
-          var len = warpPower * s.z * 30;
-          ctx.strokeStyle = s.color;
+          var len = warpPower * s.z * 34;
+          ctx.strokeStyle = color;
           ctx.lineWidth = s.r;
           ctx.beginPath();
-          ctx.moveTo(sx, sy);
-          ctx.lineTo(sx - (ddx / dl) * len, sy - (ddy / dl) * len);
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x - (ddx / dl) * len, s.y - (ddy / dl) * len);
           ctx.stroke();
         } else {
           ctx.beginPath();
-          ctx.arc(sx, sy, s.r * (1 + s.z * 0.3), 0, Math.PI * 2);
+          ctx.arc(s.x, s.y, s.r * (1 + s.z * 0.3), 0, Math.PI * 2);
           ctx.fill();
         }
-      }
-
-      // meteors
-      nextMeteor -= dt * 16.7;
-      if (nextMeteor <= 0 && meteors.length < 2) {
-        spawnMeteor();
-        nextMeteor = 3800 + Math.random() * 5200;
-      }
-      for (var m = meteors.length - 1; m >= 0; m--) {
-        var mt = meteors[m];
-        mt.x += mt.vx * dt; mt.y += mt.vy * dt; mt.life -= 0.012 * dt;
-        if (mt.life <= 0 || mt.x > W + 60 || mt.y > H + 60) { meteors.splice(m, 1); continue; }
-        var tail = 70;
-        var grad = ctx.createLinearGradient(mt.x, mt.y, mt.x - mt.vx * tail / 6, mt.y - mt.vy * tail / 6);
-        grad.addColorStop(0, 'rgba(255, 235, 200,' + (0.85 * mt.life) + ')');
-        grad.addColorStop(1, 'rgba(255, 235, 200, 0)');
-        ctx.globalAlpha = 1;
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.6;
-        ctx.beginPath();
-        ctx.moveTo(mt.x, mt.y);
-        ctx.lineTo(mt.x - mt.vx * tail / 6, mt.y - mt.vy * tail / 6);
-        ctx.stroke();
       }
       ctx.globalAlpha = 1;
     }
@@ -171,39 +135,22 @@
     window.addEventListener('resize', resize);
 
     if (REDUCED) {
-      // a calm, static sky
+      // calm, static dots — no animation loop
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
-        ctx.globalAlpha = s.a * 0.8;
-        ctx.fillStyle = s.color;
+        ctx.globalAlpha = s.a * 0.7;
+        ctx.fillStyle = palette()[s.ci % 4];
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      window.addEventListener('resize', function () {
-        for (var j = 0; j < stars.length; j++) {
-          var st = stars[j];
-          ctx.globalAlpha = st.a * 0.8;
-          ctx.fillStyle = st.color;
-          ctx.beginPath();
-          ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-      });
       return;
     }
-
-    window.addEventListener('pointermove', function (e) {
-      pointerX = e.clientX / W;
-      pointerY = e.clientY / H;
-    }, { passive: true });
 
     doc.addEventListener('visibilitychange', function () {
       if (doc.hidden) stop(); else start();
     });
-
     start();
   });
 
@@ -214,12 +161,12 @@
 
     function apply(theme) {
       root.setAttribute('data-theme', theme);
-      btn.setAttribute('aria-label', theme === 'night' ? 'Switch to day mode' : 'Switch to night mode');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
       try { localStorage.setItem('viktor-theme', theme); } catch (e) {}
     }
 
     btn.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'night' ? 'day' : 'night';
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
 
       // circular reveal via View Transitions, with graceful fallback
       if (doc.startViewTransition && !REDUCED) {
@@ -242,7 +189,7 @@
     });
   });
 
-  /* ══ 3. NAV: scroll state, hide/show, scrollspy, burger ═══── */
+  /* ══ 3. NAV: hide/show, scrollspy, burger ═════════════════── */
   safe('nav', function () {
     var nav = $('#nav');
     var burger = $('#navBurger');
@@ -254,7 +201,7 @@
       var y = window.scrollY;
       nav.classList.toggle('nav--scrolled', y > 24);
       if (!doc.body.classList.contains('menu-open')) {
-        if (y > lastY && y > 320) nav.classList.add('nav--hidden');
+        if (y > lastY && y > 360) nav.classList.add('nav--hidden');
         else nav.classList.remove('nav--hidden');
       }
       lastY = y;
@@ -302,30 +249,13 @@
         }
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
-    ['work', 'about', 'skills', 'journey', 'contact'].forEach(function (id) {
+    ['work', 'services', 'process', 'about', 'pricing', 'faq'].forEach(function (id) {
       var sec = doc.getElementById(id);
       if (sec) spy.observe(sec);
     });
   });
 
-  /* ══ 4. SCROLL PROGRESS ═══════════════════════════════════── */
-  safe('progress', function () {
-    var bar = $('#progressBar');
-    if (!bar) return;
-    var ticking = false;
-    function update() {
-      var max = doc.documentElement.scrollHeight - window.innerHeight;
-      bar.style.transform = 'scaleX(' + (max > 0 ? clamp(window.scrollY / max, 0, 1) : 0) + ')';
-      ticking = false;
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener('resize', update);
-    update();
-  });
-
-  /* ══ 5. HERO: split chars + rotating word ═════════════════── */
+  /* ══ 4. HERO: split chars + rotating word ═════════════════── */
   safe('hero', function () {
     var hero = $('.hero');
     if (!hero) return;
@@ -389,7 +319,7 @@
     }, 2600);
   });
 
-  /* ══ 6. REVEAL ON SCROLL ══════════════════════════════════── */
+  /* ══ 5. REVEAL ON SCROLL ══════════════════════════════════── */
   safe('reveal', function () {
     var items = $$('[data-reveal]');
     items.forEach(function (el) {
@@ -419,7 +349,7 @@
     $$('.project').forEach(function (p) { artIo.observe(p); });
   });
 
-  /* ══ 7. COUNTERS ══════════════════════════════════════════── */
+  /* ══ 6. COUNTERS ══════════════════════════════════════════── */
   safe('counters', function () {
     var nums = $$('[data-count-to]');
     if (!nums.length) return;
@@ -445,7 +375,7 @@
     nums.forEach(function (el) { io.observe(el); });
   });
 
-  /* ══ 8. ASTRONAUT: draw-in, eyes follow cursor, moonlet ═══── */
+  /* ══ 7. ASTRONAUT: draw-in, eyes follow cursor, moonlet ═══── */
   safe('astronaut', function () {
     var svg = $('#astro');
     if (!svg) return;
@@ -539,240 +469,12 @@
     }
   });
 
-  /* ══ 9. SKILLS CONSTELLATION ══════════════════════════════── */
-  safe('skymap', function () {
-    var wrap = $('.skymap');
-    var svg = $('#skymapSvg');
-    if (!wrap || !svg) return;
-
-    var stars = $$('.star', svg);
-    var lines = $$('.skymap__lines line', svg);
-    var chips = $$('.chip', wrap);
-    var tip = $('#skyTooltip');
-    var tipName = $('#skyTooltipName');
-    var tipLevel = $('#skyTooltipLevel');
-    var starBySkill = {};
-    stars.forEach(function (s) {
-      starBySkill[s.getAttribute('data-skill')] = s;
-      // generous invisible tap target (matters on phones)
-      var hit = doc.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      hit.setAttribute('class', 'star__hit');
-      hit.setAttribute('r', '26');
-      s.insertBefore(hit, s.firstChild);
-    });
-    var pinned = null;
-
-    // entrance: stars pop, lines draw
-    if (!REDUCED) {
-      stars.forEach(function (s) {
-        s.style.opacity = '0';
-        s.style.transformOrigin = 'center';
-      });
-      lines.forEach(function (l) {
-        var len = l.getTotalLength();
-        l.style.strokeDasharray = String(len);
-        l.style.strokeDashoffset = String(len);
-      });
-      var io = new IntersectionObserver(function (entries) {
-        if (!entries[0].isIntersecting) return;
-        io.disconnect();
-        stars.forEach(function (s, i) {
-          s.style.transition = 'opacity .5s ease ' + (i * 55) + 'ms';
-          s.style.opacity = '1';
-        });
-        lines.forEach(function (l, i) {
-          l.style.transition = 'stroke-dashoffset .9s cubic-bezier(.4,0,.2,1) ' + (350 + i * 70) + 'ms';
-          l.style.strokeDashoffset = '0';
-        });
-      }, { threshold: 0.3 });
-      io.observe(svg);
-    }
-
-    function lightLines(c, on) {
-      lines.forEach(function (l) {
-        if (l.getAttribute('data-c') === c) l.classList.toggle('lit', on);
-      });
-    }
-    function chipFor(skill) {
-      for (var i = 0; i < chips.length; i++) {
-        if (chips[i].getAttribute('data-skill') === skill) return chips[i];
-      }
-      return null;
-    }
-
-    function showTip(star) {
-      var sRect = star.getBoundingClientRect();
-      var wRect = wrap.getBoundingClientRect();
-      tipName.textContent = star.getAttribute('data-skill');
-      tipLevel.textContent = star.getAttribute('data-level');
-      tip.hidden = false;
-      var x = sRect.left - wRect.left + sRect.width / 2;
-      var y = sRect.top - wRect.top;
-      // keep the tooltip inside the panel
-      tip.style.left = '0px'; tip.style.top = '0px';
-      var tw = tip.offsetWidth;
-      var th = tip.offsetHeight;
-      x = clamp(x, tw / 2 + 8, wRect.width - tw / 2 - 8);
-      tip.style.left = x + 'px';
-      tip.style.top = Math.max(y, th + 22) + 'px';
-    }
-    function hideTip() { tip.hidden = true; }
-
-    function activate(star) {
-      deactivate();
-      pinned = star;
-      star.classList.add('lit');
-      lightLines(star.getAttribute('data-c'), true);
-      var chip = chipFor(star.getAttribute('data-skill'));
-      if (chip) chip.classList.add('active');
-      showTip(star);
-    }
-    function deactivate() {
-      if (!pinned) return;
-      pinned.classList.remove('lit');
-      lightLines(pinned.getAttribute('data-c'), false);
-      var chip = chipFor(pinned.getAttribute('data-skill'));
-      if (chip) chip.classList.remove('active');
-      pinned = null;
-      hideTip();
-    }
-
-    stars.forEach(function (star) {
-      star.addEventListener('pointerenter', function () {
-        if (pinned) return;
-        lightLines(star.getAttribute('data-c'), true);
-        showTip(star);
-      });
-      star.addEventListener('pointerleave', function () {
-        if (pinned) return;
-        lightLines(star.getAttribute('data-c'), false);
-        hideTip();
-      });
-      star.addEventListener('focus', function () { if (!pinned) { lightLines(star.getAttribute('data-c'), true); showTip(star); } });
-      star.addEventListener('blur', function () { if (!pinned) { lightLines(star.getAttribute('data-c'), false); hideTip(); } });
-      star.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (pinned === star) deactivate();
-        else activate(star);
-      });
-      star.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); star.click(); }
-      });
-    });
-
-    chips.forEach(function (chip) {
-      var skill = chip.getAttribute('data-skill');
-      chip.addEventListener('pointerenter', function () {
-        var star = starBySkill[skill];
-        if (star && !pinned) { star.classList.add('lit'); lightLines(star.getAttribute('data-c'), true); }
-      });
-      chip.addEventListener('pointerleave', function () {
-        var star = starBySkill[skill];
-        if (star && pinned !== star) { star.classList.remove('lit'); if (!pinned) lightLines(star.getAttribute('data-c'), false); }
-      });
-      chip.addEventListener('click', function () {
-        var star = starBySkill[skill];
-        if (!star) return;
-        if (pinned === star) deactivate();
-        else activate(star);
-      });
-    });
-
-    doc.addEventListener('click', function (e) {
-      if (pinned && !e.target.closest('.star') && !e.target.closest('.chip')) deactivate();
-    });
-    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') deactivate(); });
-  });
-
-  /* ══ 10. TIMELINE: path draws as you scroll ═══════════════── */
-  safe('timeline', function () {
-    var wrap = $('#timeline');
-    if (!wrap) return;
-    var svg = $('.timeline__svg', wrap);
-    var track = $('.timeline__track', wrap);
-    var draw = $('#timelineDraw');
-    var comet = $('#timelineComet');
-    var items = $$('.timeline__item', wrap);
-    var len = 0;
-    var stations = [];
-
-    function build() {
-      var H = wrap.offsetHeight;
-      if (H < 10) return;
-      svg.setAttribute('viewBox', '0 0 60 ' + H);
-      svg.style.height = H + 'px';
-
-      // gentle S-curve down the rail
-      var seg = H / 4;
-      var d = 'M30 0';
-      for (var i = 0; i < 4; i++) {
-        var y0 = seg * i;
-        var bend = (i % 2 === 0) ? 52 : 8;
-        d += ' C ' + bend + ' ' + (y0 + seg * 0.33).toFixed(0) + ', ' + (60 - bend) + ' ' + (y0 + seg * 0.66).toFixed(0) + ', 30 ' + (y0 + seg).toFixed(0);
-      }
-      track.setAttribute('d', d);
-      draw.setAttribute('d', d);
-      len = draw.getTotalLength();
-      draw.style.strokeDasharray = String(len);
-      draw.style.strokeDashoffset = String(len);
-
-      // stations: one dot per entry, snapped onto the curve
-      $$('.timeline__station', svg).forEach(function (c) { c.remove(); });
-      stations = [];
-      var SAMPLES = 220;
-      var pts = [];
-      for (var sIdx = 0; sIdx <= SAMPLES; sIdx++) {
-        pts.push(draw.getPointAtLength((len * sIdx) / SAMPLES));
-      }
-      items.forEach(function (item) {
-        var y = item.offsetTop + 14;
-        var best = 0, bestD = Infinity;
-        for (var p = 0; p < pts.length; p++) {
-          var dd = Math.abs(pts[p].y - y);
-          if (dd < bestD) { bestD = dd; best = p; }
-        }
-        var pt = pts[best];
-        var c = doc.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        c.setAttribute('class', 'timeline__station');
-        c.setAttribute('cx', pt.x.toFixed(1));
-        c.setAttribute('cy', pt.y.toFixed(1));
-        c.setAttribute('r', '6');
-        svg.insertBefore(c, comet);
-        stations.push({ el: c, at: (len * best) / SAMPLES });
-      });
-      update();
-    }
-
-    var ticking = false;
-    function update() {
-      ticking = false;
-      if (!len) return;
-      var rect = wrap.getBoundingClientRect();
-      var vh = window.innerHeight;
-      var progress = clamp((vh * 0.7 - rect.top) / rect.height, 0, 1);
-      if (REDUCED) progress = 1;
-      var at = len * progress;
-      draw.style.strokeDashoffset = String(len - at);
-      var pt = draw.getPointAtLength(at);
-      comet.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ',' + pt.y.toFixed(1) + ')');
-      comet.style.opacity = progress > 0.01 && progress < 0.995 ? '1' : '0';
-      stations.forEach(function (st) { st.el.classList.toggle('on', at >= st.at - 4); });
-    }
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener('resize', build);
-    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(build);
-    build();
-  });
-
-  /* ══ 11. MAGNETIC ELEMENTS + TILT CARDS (desktop) ═════════── */
+  /* ══ 8. MAGNETIC ELEMENTS + TILT CARDS (desktop) ══════════── */
   safe('magnetic', function () {
     if (!FINE_POINTER || REDUCED) return;
 
     $$('[data-magnetic]').forEach(function (el) {
-      var strength = 9;
+      var strength = 7;
       el.addEventListener('pointermove', function (e) {
         var r = el.getBoundingClientRect();
         var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
@@ -787,17 +489,15 @@
         var r = card.getBoundingClientRect();
         var px = (e.clientX - r.left) / r.width;
         var py = (e.clientY - r.top) / r.height;
-        card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-        card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-        var rx = (py - 0.5) * -5;
-        var ry = (px - 0.5) * 5;
-        card.style.transform = 'perspective(950px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
+        var rx = (py - 0.5) * -3.4;
+        var ry = (px - 0.5) * 3.4;
+        card.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
       });
       card.addEventListener('pointerleave', function () { card.style.transform = ''; });
     });
   });
 
-  /* ══ 12. CUSTOM CURSOR (desktop) ══════════════════════════── */
+  /* ══ 9. CUSTOM CURSOR (desktop) ═══════════════════════════── */
   safe('cursor', function () {
     if (!FINE_POINTER || REDUCED) return;
     var dot = $('#cursorDot');
@@ -816,7 +516,7 @@
       holder.classList.remove('cursor--hidden');
       if (!started) { started = true; rx = x; ry2 = y; loop(); }
       var t = e.target;
-      var interactive = t.closest && t.closest('a, button, .star, .chip, [data-tilt]');
+      var interactive = t.closest && t.closest('a, button, summary, .tag, [data-tilt]');
       holder.classList.toggle('cursor--hover', !!interactive);
     }, { passive: true });
 
@@ -825,27 +525,27 @@
     function loop() {
       rx += (x - rx) * 0.16;
       ry2 += (y - ry2) * 0.16;
-      dot.style.transform = 'translate(' + (x - 3.5) + 'px,' + (y - 3.5) + 'px)';
-      ring.style.transform = 'translate(' + (rx - 19) + 'px,' + (ry2 - 19) + 'px)';
+      dot.style.transform = 'translate(' + (x - 3) + 'px,' + (y - 3) + 'px)';
+      ring.style.transform = 'translate(' + (rx - 18) + 'px,' + (ry2 - 18) + 'px)';
       requestAnimationFrame(loop);
     }
   });
 
-  /* ══ 13. COPY EMAIL ═══════════════════════════════════════── */
+  /* ══ 10. COPY EMAIL (all [data-copy-email] buttons) ═══════── */
   safe('email', function () {
-    var btn = $('#copyEmail');
-    if (!btn) return;
-    var email = btn.getAttribute('data-email');
-    btn.addEventListener('click', function () {
-      function done() { toast('✓ Copied! ' + email + ' — talk soon.'); }
-      function fallback() { window.location.href = 'mailto:' + email; }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(email).then(done).catch(fallback);
-      } else fallback();
+    $$('[data-copy-email]').forEach(function (btn) {
+      var email = btn.getAttribute('data-email') || 'hello@viktor.dev';
+      btn.addEventListener('click', function () {
+        function done() { toast('Copied! ' + email + ' — talk soon.'); }
+        function fallback() { window.location.href = 'mailto:' + email; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email).then(done).catch(fallback);
+        } else fallback();
+      });
     });
   });
 
-  /* ══ 14. ROCKET: back to top ══════════════════════════════── */
+  /* ══ 11. ROCKET: back to top ══════════════════════════════── */
   safe('rocket', function () {
     var rocket = $('#rocket');
     if (!rocket) return;
@@ -868,7 +568,20 @@
     });
   });
 
-  /* ══ 15. EASTER EGGS ══════════════════════════════════════── */
+  /* ══ 12. FAQ: close others when one opens ═════════════════── */
+  safe('faq', function () {
+    var items = $$('.faq__item');
+    items.forEach(function (item) {
+      item.addEventListener('toggle', function () {
+        if (!item.open) return;
+        items.forEach(function (other) {
+          if (other !== item && other.open) other.open = false;
+        });
+      });
+    });
+  });
+
+  /* ══ 13. EASTER EGGS ══════════════════════════════════════── */
   safe('eggs', function () {
     var seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
     var pos = 0;
@@ -888,13 +601,13 @@
     }
 
     console.log(
-      '%c✦ Hello, fellow explorer ✦%c\n\nYou found the console. This site is 100%% hand-built —\nno frameworks, no templates. View source, poke around,\nand if you like what you see: hello@viktor.dev\n\nPsst: try the Konami code. ↑↑↓↓←→←→BA',
-      'font-size:16px; font-weight:bold; padding:6px 0; background:linear-gradient(90deg,#22d3ee,#a78bfa); color:#0b0716; padding:8px 14px; border-radius:6px;',
-      'font-size:12px; color:#a78bfa; line-height:1.7;'
+      '%cviktor.%c\n\nYou found the console. This site is 100%% hand-built —\nno frameworks, no templates, no build step. View source,\npoke around, and if you like what you see: hello@viktor.dev\n\nPsst: try the Konami code. ↑↑↓↓←→←→BA',
+      'font-size:18px; font-weight:700; background:#e34400; color:#fff; padding:8px 16px; border-radius:8px;',
+      'font-size:12px; color:#e34400; line-height:1.7;'
     );
   });
 
-  /* ══ 16. FOOTER YEAR ══════════════════════════════════════── */
+  /* ══ 14. FOOTER YEAR ══════════════════════════════════════── */
   safe('year', function () {
     var y = $('#year');
     if (y) y.textContent = String(new Date().getFullYear());

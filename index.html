@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="night">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Viktor · Developer &amp; Designer</title>
-  <meta name="description" content="Viktor is a developer & designer crafting fast, playful, hand-built digital experiences. No templates, no frameworks — just code, taste, and care." />
-  <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#070b14" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#faf6ee" media="(prefers-color-scheme: light)" />
+  <meta name="description" content="Viktor is a developer & designer crafting fast, hand-built websites and products. Design that ships — no templates, no frameworks, just craft." />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161313" media="(prefers-color-scheme: dark)" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Viktor · Developer & Designer" />
-  <meta property="og:description" content="Hand-built digital experiences that feel alive. Explore the work, the constellation of skills, and the flight log." />
+  <meta property="og:description" content="Websites that feel alive. Designed and hand-coded end to end — fast, playful, and built to convert." />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Viktor · Developer & Designer" />
-  <meta name="twitter:description" content="Hand-built digital experiences that feel alive." />
+  <meta name="twitter:description" content="Websites that feel alive. Designed and hand-coded end to end." />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M12 0c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12C8 11 11 8 12 0Z'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23E34400'/%3E%3Cpath d='M6.2 7h3l2.8 7.4L14.8 7h3l-4.4 10.6h-2.8L6.2 7Z' fill='%23fff'/%3E%3C/svg%3E" />
 
   <!-- Theme + JS flags, before paint to avoid flashes -->
   <script>
@@ -26,13 +26,16 @@
       d.classList.add('js');
       try {
         var saved = localStorage.getItem('viktor-theme');
-        var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night');
+        if (saved === 'day') saved = 'light';
+        if (saved === 'night') saved = 'dark';
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         d.setAttribute('data-theme', theme);
       } catch (e) {}
     })();
   </script>
 
-  <link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/satoshi.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Structured data -->
@@ -42,7 +45,8 @@
     "@type": "Person",
     "name": "Viktor",
     "jobTitle": "Developer & Designer",
-    "description": "Developer & designer crafting fast, playful, hand-built digital experiences.",
+    "email": "hello@viktor.dev",
+    "description": "Developer & designer crafting fast, hand-built websites and digital products.",
     "knowsAbout": ["JavaScript", "TypeScript", "React", "Node.js", "Web Design", "Accessibility", "Performance"]
   }
   </script>
@@ -50,71 +54,65 @@
 <body>
   <a class="skip-link" href="#work">Skip to content</a>
 
-  <!-- ✦ The sky (canvas starfield, sits behind everything) -->
+  <!-- Starfield canvas: visible in dark mode, and during warp in any mode -->
   <canvas id="sky" aria-hidden="true"></canvas>
-  <div class="aurora" aria-hidden="true">
-    <div class="aurora__blob aurora__blob--1"></div>
-    <div class="aurora__blob aurora__blob--2"></div>
-    <div class="aurora__blob aurora__blob--3"></div>
-  </div>
-  <div class="grain" aria-hidden="true"></div>
-
-  <!-- Scroll progress -->
-  <div class="progress" aria-hidden="true"><div class="progress__bar" id="progressBar"></div></div>
 
   <!-- ✦ Navigation -->
   <header class="nav" id="nav">
-    <a class="nav__logo" href="#top" aria-label="Viktor — back to top">
-      <span class="nav__logo-v">v</span>
-      <svg class="sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c1 8 4 11 12 12-8 1-11 4-12 12-1-8-4-11-12-12C8 11 11 8 12 0Z"/></svg>
-    </a>
+    <div class="nav__inner">
+      <a class="nav__logo" href="#top" aria-label="Viktor — back to top">viktor<span class="nav__logo-dot">.</span></a>
 
-    <nav class="nav__links" id="navLinks" aria-label="Main navigation">
-      <a href="#work" class="nav__link" data-section="work"><span class="nav__num">01</span>Work</a>
-      <a href="#about" class="nav__link" data-section="about"><span class="nav__num">02</span>About</a>
-      <a href="#skills" class="nav__link" data-section="skills"><span class="nav__num">03</span>Skills</a>
-      <a href="#journey" class="nav__link" data-section="journey"><span class="nav__num">04</span>Journey</a>
-      <a href="#contact" class="nav__link nav__link--cta" data-section="contact">Contact</a>
-    </nav>
+      <nav class="nav__bar" id="navLinks" aria-label="Main navigation">
+        <a href="#work" class="nav__link" data-section="work">Work</a>
+        <a href="#services" class="nav__link" data-section="services">Services</a>
+        <a href="#process" class="nav__link" data-section="process">Process</a>
+        <a href="#about" class="nav__link" data-section="about">About</a>
+        <a href="#pricing" class="nav__link" data-section="pricing">Pricing</a>
+        <a href="#faq" class="nav__link" data-section="faq">FAQ</a>
+      </nav>
 
-    <div class="nav__actions">
-      <!-- Day / night toggle with morphing sun & moon -->
-      <button class="theme-toggle" id="themeToggle" aria-label="Switch to day mode" title="Toggle day / night">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <mask id="moon-mask">
-            <rect x="0" y="0" width="24" height="24" fill="white"/>
-            <circle class="toggle__bite" cx="30" cy="6" r="7" fill="black"/>
-          </mask>
-          <circle class="toggle__core" cx="12" cy="12" r="5.5" mask="url(#moon-mask)"/>
-          <g class="toggle__rays" stroke-linecap="round">
-            <line x1="12" y1="1.5"  x2="12" y2="4"/>
-            <line x1="12" y1="20"   x2="12" y2="22.5"/>
-            <line x1="1.5" y1="12"  x2="4"  y2="12"/>
-            <line x1="20"  y1="12"  x2="22.5" y2="12"/>
-            <line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/>
-            <line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/>
-            <line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/>
-            <line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/>
-          </g>
-        </svg>
-      </button>
+      <div class="nav__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Toggle light / dark">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <mask id="moon-mask">
+              <rect x="0" y="0" width="24" height="24" fill="white"/>
+              <circle class="toggle__bite" cx="30" cy="6" r="7" fill="black"/>
+            </mask>
+            <circle class="toggle__core" cx="12" cy="12" r="5.5" mask="url(#moon-mask)"/>
+            <g class="toggle__rays" stroke-linecap="round">
+              <line x1="12" y1="1.5"  x2="12" y2="4"/>
+              <line x1="12" y1="20"   x2="12" y2="22.5"/>
+              <line x1="1.5" y1="12"  x2="4"  y2="12"/>
+              <line x1="20"  y1="12"  x2="22.5" y2="12"/>
+              <line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/>
+              <line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/>
+              <line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/>
+              <line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/>
+            </g>
+          </svg>
+        </button>
 
-      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span>
-      </button>
+        <a href="#contact" class="btn btn--primary btn--nav" data-magnetic>Let’s talk</a>
+
+        <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Mobile menu overlay -->
   <div class="menu" id="mobileMenu" aria-hidden="true">
     <nav class="menu__links" aria-label="Mobile navigation">
-      <a href="#work" class="menu__link" style="--i:0"><span>01</span>Work</a>
-      <a href="#about" class="menu__link" style="--i:1"><span>02</span>About</a>
-      <a href="#skills" class="menu__link" style="--i:2"><span>03</span>Skills</a>
-      <a href="#journey" class="menu__link" style="--i:3"><span>04</span>Journey</a>
-      <a href="#contact" class="menu__link" style="--i:4"><span>05</span>Contact</a>
+      <a href="#work" class="menu__link" style="--i:0">Work</a>
+      <a href="#services" class="menu__link" style="--i:1">Services</a>
+      <a href="#process" class="menu__link" style="--i:2">Process</a>
+      <a href="#about" class="menu__link" style="--i:3">About</a>
+      <a href="#pricing" class="menu__link" style="--i:4">Pricing</a>
+      <a href="#faq" class="menu__link" style="--i:5">FAQ</a>
+      <a href="#contact" class="menu__link menu__link--accent" style="--i:6">Let’s talk</a>
     </nav>
-    <p class="menu__foot" style="--i:5">hello@viktor.dev · Earth</p>
+    <p class="menu__foot" style="--i:7">hello@viktor.dev · responds within 24h</p>
   </div>
 
   <main id="top">
@@ -122,9 +120,9 @@
     <!-- ════════════════════ HERO ════════════════════ -->
     <section class="hero" id="home">
       <div class="hero__inner">
-        <p class="hero__eyebrow" data-reveal>
+        <p class="hero__badge" data-reveal>
           <span class="status-dot" aria-hidden="true"></span>
-          Viktor — developer &amp; designer, based on Earth
+          Available for new projects
         </p>
 
         <h1 class="hero__title">
@@ -139,45 +137,118 @@
           </span>
         </h1>
 
-        <p class="hero__sub" data-reveal data-reveal-delay="500">
-          Pixel-perfect, hand-coded, and a little bit playful.
-          I turn ideas into smooth digital products people actually enjoy using.
+        <p class="hero__sub" data-reveal data-reveal-delay="450">
+          Viktor — developer &amp; designer. I take products from first sketch to
+          last <code>git push</code>: pixel-perfect, hand-coded, and quietly playful.
         </p>
 
-        <div class="hero__cta" data-reveal data-reveal-delay="650">
+        <div class="hero__cta" data-reveal data-reveal-delay="600">
           <a href="#work" class="btn btn--primary" data-magnetic>
             <span>See my work</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v14m0 0 6-6m-6 6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a href="#contact" class="btn btn--ghost" data-magnetic>
+          <a href="#contact" class="btn btn--outline" data-magnetic>
             <span>Say hello</span>
           </a>
         </div>
-      </div>
 
-      <a class="hero__scroll" href="#work" aria-label="Scroll to work">
-        <span class="hero__scroll-text">scroll</span>
-        <span class="hero__scroll-line" aria-hidden="true"><span></span></span>
-      </a>
+        <div class="hero__trust" data-reveal data-reveal-delay="750">
+          <span class="hero__avatars" aria-hidden="true">
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#E8D9CC"/><circle cx="18" cy="14" r="6" fill="#A56D4B"/><path d="M6 32a12 12 0 0 1 24 0" fill="#A56D4B"/></svg>
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#D7DFE3"/><circle cx="18" cy="14" r="6" fill="#41555E"/><path d="M6 32a12 12 0 0 1 24 0" fill="#41555E"/></svg>
+            <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#EAD9D3"/><circle cx="18" cy="14" r="6" fill="#7C4A3A"/><path d="M6 32a12 12 0 0 1 24 0" fill="#7C4A3A"/></svg>
+          </span>
+          <span class="hero__stars" aria-label="Rated five stars by clients">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+          </span>
+          <span class="hero__trust-text">Trusted by <strong>20+ founders</strong> &amp; teams</span>
+        </div>
+      </div>
     </section>
 
-    <!-- ════════════════════ MARQUEE ════════════════════ -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <div class="marquee__group">
-          <span>JavaScript</span><i>✦</i><span>TypeScript</span><i>✦</i><span>React</span><i>✦</i><span>Node.js</span><i>✦</i><span>CSS Wizardry</span><i>✦</i><span>SVG Animation</span><i>✦</i><span>Accessibility</span><i>✦</i><span>Performance</span><i>✦</i>
+    <!-- ════════════════════ WORK MARQUEE ════════════════════ -->
+    <div class="strip" aria-hidden="true">
+      <div class="strip__track">
+        <div class="strip__group">
+          <a href="#work" class="strip__card strip__card--nova" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M8 12h6l5 16h18l4-12H17" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="36" r="3"/><circle cx="35" cy="36" r="3"/></svg>
+            <span>Nova Commerce</span><em>E-commerce</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--pulse" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M6 34 18 22l8 6L42 12" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="12" r="4"/></svg>
+            <span>Pulseboard</span><em>Analytics</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--echo" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M10 10h28a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H22l-8 8v-8h-4a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4Z" fill="none" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="21" r="2.4"/><circle cx="26" cy="21" r="2.4"/><circle cx="34" cy="21" r="2.4"/></svg>
+            <span>Echo</span><em>AI assistant</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--drizzle" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M14 26a10 10 0 0 1 10-9 12 12 0 0 1 11 7 8 8 0 0 1-1 16H16a9 9 0 0 1-2-14Z" fill="none" stroke-width="3" stroke-linejoin="round"/><line x1="20" y1="44" x2="18" y2="48" stroke-width="3" stroke-linecap="round"/><line x1="28" y1="44" x2="26" y2="48" stroke-width="3" stroke-linecap="round"/></svg>
+            <span>Drizzle</span><em>Weather PWA</em>
+          </a>
         </div>
-        <div class="marquee__group">
-          <span>JavaScript</span><i>✦</i><span>TypeScript</span><i>✦</i><span>React</span><i>✦</i><span>Node.js</span><i>✦</i><span>CSS Wizardry</span><i>✦</i><span>SVG Animation</span><i>✦</i><span>Accessibility</span><i>✦</i><span>Performance</span><i>✦</i>
+        <div class="strip__group">
+          <a href="#work" class="strip__card strip__card--nova" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M8 12h6l5 16h18l4-12H17" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="36" r="3"/><circle cx="35" cy="36" r="3"/></svg>
+            <span>Nova Commerce</span><em>E-commerce</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--pulse" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M6 34 18 22l8 6L42 12" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="12" r="4"/></svg>
+            <span>Pulseboard</span><em>Analytics</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--echo" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M10 10h28a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H22l-8 8v-8h-4a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4Z" fill="none" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="21" r="2.4"/><circle cx="26" cy="21" r="2.4"/><circle cx="34" cy="21" r="2.4"/></svg>
+            <span>Echo</span><em>AI assistant</em>
+          </a>
+          <a href="#work" class="strip__card strip__card--drizzle" tabindex="-1">
+            <svg viewBox="0 0 48 48"><path d="M14 26a10 10 0 0 1 10-9 12 12 0 0 1 11 7 8 8 0 0 1-1 16H16a9 9 0 0 1-2-14Z" fill="none" stroke-width="3" stroke-linejoin="round"/><line x1="20" y1="44" x2="18" y2="48" stroke-width="3" stroke-linecap="round"/><line x1="28" y1="44" x2="26" y2="48" stroke-width="3" stroke-linecap="round"/></svg>
+            <span>Drizzle</span><em>Weather PWA</em>
+          </a>
         </div>
       </div>
     </div>
 
+    <!-- Trusted-by wordmarks -->
+    <section class="logos" aria-label="Trusted by">
+      <p class="logos__label" data-reveal>Trusted by teams and founders around the world</p>
+      <ul class="logos__row" data-reveal>
+        <li class="logos__mark logos__mark--1">NOVA</li>
+        <li class="logos__mark logos__mark--2">Pulseboard</li>
+        <li class="logos__mark logos__mark--3">echo</li>
+        <li class="logos__mark logos__mark--4">drizzle°</li>
+        <li class="logos__mark logos__mark--5">GrowthLoop</li>
+        <li class="logos__mark logos__mark--6">SUNDAY&nbsp;STUDIO</li>
+      </ul>
+    </section>
+
+    <!-- ════════════════════ SERVICES INTRO ════════════════════ -->
+    <section class="section intro" id="services">
+      <p class="eyebrow" data-reveal>What I do</p>
+      <h2 class="intro__statement" data-reveal>
+        I help startups and studios show up with
+        <em>clarity,</em> <em>confidence,</em> and design that
+        <span class="intro__strong">actually ships.</span>
+      </h2>
+
+      <ul class="tags" data-reveal>
+        <li class="tag" style="--tilt:-3deg"><i class="tag__dot tag__dot--orange"></i>Web design</li>
+        <li class="tag" style="--tilt:2deg"><i class="tag__dot tag__dot--blue"></i>Development</li>
+        <li class="tag" style="--tilt:-2deg"><i class="tag__dot tag__dot--green"></i>Design systems</li>
+        <li class="tag" style="--tilt:3deg"><i class="tag__dot tag__dot--purple"></i>Animations</li>
+        <li class="tag" style="--tilt:-1.5deg"><i class="tag__dot tag__dot--yellow"></i>Performance</li>
+        <li class="tag" style="--tilt:2.5deg"><i class="tag__dot tag__dot--pink"></i>Accessibility</li>
+      </ul>
+    </section>
+
     <!-- ════════════════════ WORK ════════════════════ -->
     <section class="section" id="work">
       <header class="section__head" data-reveal>
-        <p class="section__eyebrow"><span>01</span> Selected work</p>
-        <h2 class="section__title">Things I’ve launched<br>into orbit</h2>
+        <p class="eyebrow">Selected work</p>
+        <h2 class="section__title">Things I’ve <em>shipped</em> recently.</h2>
       </header>
 
       <div class="projects">
@@ -214,13 +285,14 @@
             </svg>
           </div>
           <div class="project__body">
-            <span class="project__num">01</span>
-            <h3 class="project__name">Nova Commerce</h3>
-            <p class="project__desc">A storefront that loads before you blink. Custom checkout, 99 Lighthouse score, and product pages that sell themselves.</p>
-            <ul class="project__tags"><li>Next.js</li><li>Stripe</li><li>PostgreSQL</li></ul>
-            <div class="project__links">
-              <a href="#contact" class="project__link">Case study <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="project__row">
+              <h3 class="project__name">Nova Commerce</h3>
+              <ul class="project__tags"><li>Next.js</li><li>Stripe</li></ul>
             </div>
+            <p class="project__desc">A storefront that loads before you blink. Custom checkout, 99 Lighthouse score, product pages that sell themselves.</p>
+            <a href="#contact" class="project__link">View case study
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
         </article>
 
@@ -240,13 +312,14 @@
             </svg>
           </div>
           <div class="project__body">
-            <span class="project__num">02</span>
-            <h3 class="project__name">Pulseboard</h3>
-            <p class="project__desc">Real-time analytics for teams who hate waiting. Live charts, websocket streams, and zero refresh buttons in sight.</p>
-            <ul class="project__tags"><li>React</li><li>WebSockets</li><li>D3</li></ul>
-            <div class="project__links">
-              <a href="#contact" class="project__link">Case study <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="project__row">
+              <h3 class="project__name">Pulseboard</h3>
+              <ul class="project__tags"><li>React</li><li>WebSockets</li></ul>
             </div>
+            <p class="project__desc">Real-time analytics for teams who hate waiting. Live charts, websocket streams, zero refresh buttons in sight.</p>
+            <a href="#contact" class="project__link">View case study
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
         </article>
 
@@ -273,13 +346,14 @@
             </svg>
           </div>
           <div class="project__body">
-            <span class="project__num">03</span>
-            <h3 class="project__name">Echo</h3>
-            <p class="project__desc">An AI assistant that answers before you finish typing. Streaming responses, fuzzy memory, and a personality setting.</p>
-            <ul class="project__tags"><li>TypeScript</li><li>Node.js</li><li>LLM API</li></ul>
-            <div class="project__links">
-              <a href="#contact" class="project__link">Case study <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="project__row">
+              <h3 class="project__name">Echo</h3>
+              <ul class="project__tags"><li>TypeScript</li><li>LLM API</li></ul>
             </div>
+            <p class="project__desc">An AI assistant that answers before you finish typing. Streaming responses, fuzzy memory, a personality dial.</p>
+            <a href="#contact" class="project__link">View case study
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
         </article>
 
@@ -289,9 +363,7 @@
             <svg class="art art--drizzle" viewBox="0 0 400 240">
               <rect class="art__window" x="150" y="20" width="100" height="200" rx="18"/>
               <line class="art__line" x1="186" y1="34" x2="214" y2="34"/>
-              <g class="drizzle__sun">
-                <circle cx="200" cy="92" r="20"/>
-              </g>
+              <g class="drizzle__sun"><circle cx="200" cy="92" r="20"/></g>
               <g class="drizzle__cloud">
                 <path d="M176 110a14 14 0 0 1 14-13 17 17 0 0 1 32 5 12 12 0 0 1-2 24h-32a13 13 0 0 1-12-16Z"/>
               </g>
@@ -302,262 +374,369 @@
               </g>
               <rect x="172" y="172" width="56" height="9" rx="4.5" class="art__bar"/>
               <rect x="180" y="188" width="40" height="9" rx="4.5" class="art__bar art__bar--accent"/>
-              <g class="drizzle__orbit"><circle cx="0" cy="0" r="4" class="drizzle__moonlet"/></g>
             </svg>
           </div>
           <div class="project__body">
-            <span class="project__num">04</span>
-            <h3 class="project__name">Drizzle</h3>
-            <p class="project__desc">A weather app you check for fun. Animated skies that match the forecast and a rain radar drawn on canvas.</p>
-            <ul class="project__tags"><li>PWA</li><li>Canvas</li><li>Geolocation</li></ul>
-            <div class="project__links">
-              <a href="#contact" class="project__link">Case study <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <div class="project__row">
+              <h3 class="project__name">Drizzle</h3>
+              <ul class="project__tags"><li>PWA</li><li>Canvas</li></ul>
             </div>
+            <p class="project__desc">A weather app you check for fun. Animated skies that match the forecast and a rain radar drawn on canvas.</p>
+            <a href="#contact" class="project__link">View case study
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7m0 0H9m8 0v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
           </div>
         </article>
 
       </div>
     </section>
 
+    <!-- ════════════════════ PROCESS ════════════════════ -->
+    <section class="section" id="process">
+      <header class="section__head section__head--center" data-reveal>
+        <p class="eyebrow">How I work</p>
+        <h2 class="section__title">Great work, <em>done simply.</em></h2>
+      </header>
+
+      <div class="process">
+        <svg class="process__squiggle process__squiggle--1" viewBox="0 0 120 60" aria-hidden="true">
+          <path d="M8 46 C 36 54, 52 30, 64 22 S 100 6, 112 14" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 7"/>
+          <path d="M104 8l9 5-3 10" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="process__squiggle process__squiggle--2" viewBox="0 0 120 60" aria-hidden="true">
+          <path d="M8 14 C 36 6, 52 30, 64 38 S 100 54, 112 46" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 7"/>
+          <path d="M104 52l9-5-3-10" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <article class="step" style="--rot:-2deg" data-reveal>
+          <div class="step__panel" aria-hidden="true">
+            <div class="step__check"><span class="check"></span>Goals &amp; audience</div>
+            <div class="step__check"><span class="check"></span>Moodboard &amp; references</div>
+            <div class="step__check"><span class="check"></span>Scope, timeline, quote</div>
+          </div>
+          <span class="step__num">1</span>
+          <h3 class="step__name">Discover</h3>
+          <p class="step__desc">A short call and a few sharp questions. We define what “done” looks like before any pixels move.</p>
+        </article>
+
+        <article class="step" style="--rot:1.6deg" data-reveal data-reveal-delay="120">
+          <div class="step__panel" aria-hidden="true">
+            <div class="step__task">Homepage UI <span class="chiplet chiplet--yellow">In Progress</span></div>
+            <div class="step__task">Design system <span class="chiplet chiplet--magenta">Review</span></div>
+            <div class="step__task">Checkout flow <span class="chiplet chiplet--blue">To Do</span></div>
+          </div>
+          <span class="step__num">2</span>
+          <h3 class="step__name">Design &amp; build</h3>
+          <p class="step__desc">Design and code move together — you watch ideas become a living site, with progress you can click.</p>
+        </article>
+
+        <article class="step" style="--rot:-1.2deg" data-reveal data-reveal-delay="240">
+          <div class="step__panel step__panel--launch" aria-hidden="true">
+            <svg class="step__rocket" viewBox="0 0 64 64">
+              <path class="step__rocket-body" d="M32 6c8 6.5 12 15.5 12 25 0 4.8-.8 9-2.4 13H22.4A36 36 0 0 1 20 31c0-9.5 4-18.5 12-25Z"/>
+              <circle class="step__rocket-window" cx="32" cy="26" r="5"/>
+              <path class="step__rocket-fin" d="M22 36l-8 11 8-1.6M42 36l8 11-8-1.6"/>
+              <path class="step__rocket-flame" d="M32 46c2.8 3.8 2.8 7.6 0 12-2.8-4.4-2.8-8.2 0-12Z"/>
+            </svg>
+            <span class="step__spark step__spark--1">✦</span>
+            <span class="step__spark step__spark--2">✦</span>
+            <span class="step__spark step__spark--3">✦</span>
+          </div>
+          <span class="step__num">3</span>
+          <h3 class="step__name">Launch &amp; iterate</h3>
+          <p class="step__desc">Ship, measure, polish. You get the source, the docs, and a partner who answers after launch day.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ════════════════════ TESTIMONIALS ════════════════════ -->
+    <section class="section" id="testimonials">
+      <header class="section__head section__head--center" data-reveal>
+        <p class="eyebrow">Testimonials</p>
+        <h2 class="section__title">People love the work, <em>and the results.</em></h2>
+      </header>
+
+      <div class="quotes">
+        <figure class="quote" data-reveal>
+          <span class="quote__stars" aria-label="Five stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+          </span>
+          <blockquote>“Our old store felt like paperwork. Viktor rebuilt it end to end and conversion jumped 38% in the first month. He sweats details we didn’t know existed.”</blockquote>
+          <figcaption>
+            <span class="quote__avatar" style="--av:#E8D9CC; --avt:#7C4A3A">M</span>
+            <span><strong>Maya Chen</strong><em>Founder, Nova Commerce</em></span>
+          </figcaption>
+        </figure>
+
+        <figure class="quote" data-reveal data-reveal-delay="120">
+          <span class="quote__stars" aria-label="Five stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+          </span>
+          <blockquote>“He understood the product in one call, then shipped a dashboard our customers actually open daily. Fast, precise, and genuinely fun to work with.”</blockquote>
+          <figcaption>
+            <span class="quote__avatar" style="--av:#D7DFE3; --avt:#41555E">J</span>
+            <span><strong>Jonas Berg</strong><em>Product Lead, Pulseboard</em></span>
+          </figcaption>
+        </figure>
+
+        <figure class="quote" data-reveal data-reveal-delay="240">
+          <span class="quote__stars" aria-label="Five stars">
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2.5 14.9 8.6l6.6.8-4.9 4.5 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.4l6.6-.8Z"/></svg>
+          </span>
+          <blockquote>“The bar was ‘make AI feel friendly.’ Viktor delivered an interface so smooth our demo closes deals on its own. Worth every cent.”</blockquote>
+          <figcaption>
+            <span class="quote__avatar" style="--av:#EAD9D3; --avt:#8A4A35">A</span>
+            <span><strong>Ari Solano</strong><em>CEO, Echo Labs</em></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
     <!-- ════════════════════ ABOUT ════════════════════ -->
     <section class="section" id="about">
       <header class="section__head" data-reveal>
-        <p class="section__eyebrow"><span>02</span> About me</p>
-        <h2 class="section__title">The human behind<br>the helmet</h2>
+        <p class="eyebrow">About</p>
+        <h2 class="section__title">The human <em>behind the pixels.</em></h2>
       </header>
 
       <div class="about">
         <div class="about__figure" data-reveal>
-          <!-- ✦ Astronaut: draws itself in, eyes follow your cursor -->
-          <svg class="astro" id="astro" viewBox="0 0 320 340" role="img" aria-label="Friendly astronaut illustration whose eyes follow your cursor">
-            <g class="astro__float">
-              <!-- orbit ring + moonlet -->
-              <ellipse class="astro__orbit" cx="160" cy="170" rx="150" ry="58" />
-              <g class="astro__moonlet-track"><circle class="astro__moonlet" cx="310" cy="170" r="5"/></g>
-
-              <!-- antenna -->
-              <line class="astro__stroke" x1="160" y1="52" x2="160" y2="30"/>
-              <circle class="astro__beacon" cx="160" cy="24" r="5"/>
-
-              <!-- helmet -->
-              <circle class="astro__stroke astro__helmet" cx="160" cy="140" r="88"/>
-              <path class="astro__stroke astro__shine" d="M96 110a76 76 0 0 1 38 -42"/>
-
-              <!-- visor -->
-              <path class="astro__visor" d="M104 124a56 48 0 0 1 112 0v20a56 48 0 0 1-112 0Z"/>
-              <path class="astro__stroke astro__visor-glint" d="M124 102a44 36 0 0 1 30-14"/>
-
-              <!-- face -->
-              <g class="astro__eyes">
-                <circle class="astro__eye" cx="138" cy="138" r="9"/>
-                <circle class="astro__eye" cx="182" cy="138" r="9"/>
+          <div class="about__card">
+            <!-- ✦ Astronaut: draws itself in, eyes follow your cursor -->
+            <svg class="astro" id="astro" viewBox="0 0 320 340" role="img" aria-label="Friendly astronaut illustration whose eyes follow your cursor">
+              <g class="astro__float">
+                <ellipse class="astro__orbit" cx="160" cy="170" rx="150" ry="58" />
+                <g class="astro__moonlet-track"><circle class="astro__moonlet" cx="310" cy="170" r="5"/></g>
+                <line class="astro__stroke" x1="160" y1="52" x2="160" y2="30"/>
+                <circle class="astro__beacon" cx="160" cy="24" r="5"/>
+                <circle class="astro__stroke astro__helmet" cx="160" cy="140" r="88"/>
+                <path class="astro__stroke astro__shine" d="M96 110a76 76 0 0 1 38 -42"/>
+                <path class="astro__visor" d="M104 124a56 48 0 0 1 112 0v20a56 48 0 0 1-112 0Z"/>
+                <path class="astro__stroke astro__visor-glint" d="M124 102a44 36 0 0 1 30-14"/>
+                <g class="astro__eyes">
+                  <circle class="astro__eye" cx="138" cy="138" r="9"/>
+                  <circle class="astro__eye" cx="182" cy="138" r="9"/>
+                </g>
+                <path class="astro__smile" d="M148 162q12 10 24 0"/>
+                <circle class="astro__blush" cx="124" cy="154" r="6"/>
+                <circle class="astro__blush" cx="196" cy="154" r="6"/>
+                <path class="astro__stroke" d="M104 226c-20 10-32 26-34 50M216 226c20 10 32 26 34 50"/>
+                <path class="astro__stroke astro__chest" d="M118 232v22a14 14 0 0 0 14 14h56a14 14 0 0 0 14-14v-22"/>
+                <rect class="astro__stroke astro__panel" x="138" y="248" width="44" height="26" rx="8"/>
+                <circle class="astro__btn astro__btn--1" cx="150" cy="261" r="4"/>
+                <circle class="astro__btn astro__btn--2" cx="161" cy="261" r="4"/>
+                <circle class="astro__btn astro__btn--3" cx="172" cy="261" r="4"/>
               </g>
-              <path class="astro__smile" d="M148 162q12 10 24 0"/>
-              <circle class="astro__blush" cx="124" cy="154" r="6"/>
-              <circle class="astro__blush" cx="196" cy="154" r="6"/>
-
-              <!-- suit -->
-              <path class="astro__stroke" d="M104 226c-20 10-32 26-34 50M216 226c20 10 32 26 34 50"/>
-              <path class="astro__stroke astro__chest" d="M118 232v22a14 14 0 0 0 14 14h56a14 14 0 0 0 14-14v-22"/>
-              <rect class="astro__stroke astro__panel" x="138" y="248" width="44" height="26" rx="8"/>
-              <circle class="astro__btn astro__btn--1" cx="150" cy="261" r="4"/>
-              <circle class="astro__btn astro__btn--2" cx="161" cy="261" r="4"/>
-              <circle class="astro__btn astro__btn--3" cx="172" cy="261" r="4"/>
-            </g>
-          </svg>
-          <p class="about__hint" aria-hidden="true">psst — he’s watching your cursor</p>
-        </div>
-
-        <div class="about__text">
-          <p data-reveal>Hi, I’m <strong>Viktor</strong>. I’ve spent the last few years doing one thing:
-            making the web feel <em>less like paperwork and more like play</em>.</p>
-          <p data-reveal>I design and build websites, apps, and interfaces end-to-end — from the first
-            sketch to the last <code>git push</code>. My happy place is where engineering meets design:
-            shaving milliseconds, polishing micro-interactions, and sweating details most people only
-            <em>feel</em> rather than see.</p>
-          <p data-reveal>When I’m not shipping, I’m probably reverse-engineering an animation I saw somewhere,
-            or explaining to my family that no, I can’t fix the printer. <span class="nowrap">(I can. I just won’t.)</span></p>
+            </svg>
+            <p class="about__hint" aria-hidden="true">psst — he watches your cursor</p>
+          </div>
 
           <dl class="stats">
-            <div class="stat" data-reveal>
+            <div class="stat">
               <dt class="stat__num"><span data-count-to="5">0</span>+</dt>
               <dd class="stat__label">years building</dd>
             </div>
-            <div class="stat" data-reveal data-reveal-delay="120">
+            <div class="stat">
               <dt class="stat__num"><span data-count-to="40">0</span>+</dt>
               <dd class="stat__label">projects shipped</dd>
             </div>
-            <div class="stat" data-reveal data-reveal-delay="240">
+            <div class="stat">
               <dt class="stat__num"><span data-count-to="1200">0</span>+</dt>
               <dd class="stat__label">cups of coffee</dd>
             </div>
           </dl>
         </div>
+
+        <div class="about__text">
+          <p data-reveal>Hi, I’m <strong>Viktor</strong>. For the last five years I’ve done one thing:
+            make the web feel <em class="serif-accent">less like paperwork and more like play.</em></p>
+          <p data-reveal>I design and build websites, apps, and interfaces end-to-end — from the first
+            sketch to the last <code>git push</code>. My happy place is where engineering meets design:
+            shaving milliseconds, polishing micro-interactions, sweating details most people only
+            <em class="serif-accent">feel</em> rather than see.</p>
+          <p data-reveal>When I’m not shipping, I’m reverse-engineering an animation I saw somewhere,
+            or explaining to my family that no, I can’t fix the printer. <span class="nowrap">(I can. I just won’t.)</span></p>
+
+          <ul class="career" data-reveal>
+            <li class="career__row">
+              <span class="career__role">Independent developer &amp; designer</span>
+              <span class="career__org">Worldwide</span>
+              <span class="career__years">Now</span>
+            </li>
+            <li class="career__row">
+              <span class="career__role">Frontend developer</span>
+              <span class="career__org">Product studio</span>
+              <span class="career__years">2023 — 2025</span>
+            </li>
+            <li class="career__row">
+              <span class="career__role">Junior developer</span>
+              <span class="career__org">Agency</span>
+              <span class="career__years">2021 — 2023</span>
+            </li>
+            <li class="career__row">
+              <span class="career__role">First “Hello, World”</span>
+              <span class="career__org">A dark bedroom</span>
+              <span class="career__years">2020</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    <!-- ════════════════════ SKILLS ════════════════════ -->
-    <section class="section" id="skills">
-      <header class="section__head" data-reveal>
-        <p class="section__eyebrow"><span>03</span> Skills</p>
-        <h2 class="section__title">A constellation<br>of skills</h2>
-        <p class="section__note">Tap a star or a chip — brighter stars mean more flight hours.</p>
+    <!-- ════════════════════ PRICING ════════════════════ -->
+    <section class="section section--dotted" id="pricing">
+      <header class="section__head section__head--center" data-reveal>
+        <p class="eyebrow">Pricing</p>
+        <h2 class="section__title">Transparent pricing, <em>no surprises.</em></h2>
       </header>
 
-      <div class="skymap" data-reveal>
-        <svg class="skymap__svg" id="skymapSvg" viewBox="0 0 720 560" role="group" aria-label="Interactive star map of skills">
-          <!-- dust -->
-          <g class="skymap__dust" aria-hidden="true">
-            <circle cx="60"  cy="330" r="1.6"/><circle cx="120" cy="60"  r="1.3"/><circle cx="200" cy="290" r="1.2"/>
-            <circle cx="395" cy="50"  r="1.5"/><circle cx="420" cy="330" r="1.4"/><circle cx="555" cy="350" r="1.2"/>
-            <circle cx="660" cy="60"  r="1.4"/><circle cx="690" cy="300" r="1.6"/><circle cx="90"  cy="470" r="1.3"/>
-            <circle cx="640" cy="480" r="1.5"/><circle cx="360" cy="240" r="1.3"/><circle cx="160" cy="525" r="1.2"/>
-          </g>
+      <div class="plans">
+        <article class="plan" data-reveal>
+          <span class="plan__chip">Project</span>
+          <p class="plan__price"><strong>$3,200</strong><span>/from</span></p>
+          <ul class="plan__list">
+            <li><span class="check"></span>Fixed scope, fixed quote</li>
+            <li><span class="check"></span>Design <strong>+</strong> development</li>
+            <li><span class="check"></span>Two polish rounds included</li>
+            <li><span class="check"></span>Launch &amp; handoff support</li>
+            <li><span class="check"></span>You own all the source</li>
+          </ul>
+          <a href="#contact" class="btn btn--pill-outline" data-magnetic>Start a project</a>
+        </article>
 
-          <!-- constellation lines -->
-          <g class="skymap__lines" aria-hidden="true">
-            <!-- frontend -->
-            <line data-c="frontend" x1="90"  y1="200" x2="150" y2="130"/>
-            <line data-c="frontend" x1="150" y1="130" x2="250" y2="90"/>
-            <line data-c="frontend" x1="250" y1="90"  x2="330" y2="150"/>
-            <line data-c="frontend" x1="330" y1="150" x2="260" y2="210"/>
-            <line data-c="frontend" x1="260" y1="210" x2="250" y2="90"/>
-            <!-- backend -->
-            <line data-c="backend" x1="480" y1="120" x2="570" y2="90"/>
-            <line data-c="backend" x1="570" y1="90"  x2="640" y2="170"/>
-            <line data-c="backend" x1="640" y1="170" x2="600" y2="260"/>
-            <line data-c="backend" x1="600" y1="260" x2="490" y2="230"/>
-            <line data-c="backend" x1="490" y1="230" x2="480" y2="120"/>
-            <!-- craft -->
-            <line data-c="craft" x1="220" y1="380" x2="320" y2="440"/>
-            <line data-c="craft" x1="320" y1="440" x2="430" y2="400"/>
-            <line data-c="craft" x1="430" y1="400" x2="530" y2="450"/>
-            <line data-c="craft" x1="320" y1="440" x2="250" y2="480"/>
-          </g>
+        <article class="plan plan--featured" data-reveal data-reveal-delay="140">
+          <div class="plan__top">
+            <span class="plan__chip plan__chip--dark">Retainer</span>
+            <span class="plan__spots"><i></i>1 spot left for July</span>
+          </div>
+          <p class="plan__price"><strong>$4,800</strong><span>/month</span></p>
+          <ul class="plan__list">
+            <li><span class="check"></span>Unlimited requests, one at a time</li>
+            <li><span class="check"></span>48-hour average turnaround</li>
+            <li><span class="check"></span>Design, build &amp; maintenance</li>
+            <li><span class="check"></span>Weekly progress notes</li>
+            <li><span class="check"></span>Pause or cancel anytime</li>
+          </ul>
+          <a href="#contact" class="btn btn--pill-solid" data-magnetic>Book the spot</a>
+        </article>
+      </div>
 
-          <!-- group labels -->
-          <text class="skymap__label" x="190" y="46">FRONTEND</text>
-          <text class="skymap__label" x="560" y="320">BACKEND</text>
-          <text class="skymap__label" x="370" y="510">CRAFT</text>
+      <div class="plans__email" data-reveal>
+        <p>Not sure which fits? <span class="serif-accent">Let’s figure it out together.</span></p>
+        <button class="btn btn--outline" data-copy-email data-email="hello@viktor.dev">Email me</button>
+      </div>
+    </section>
 
-          <!-- stars -->
-          <g class="skymap__stars">
-            <g class="star" data-c="frontend" data-skill="HTML" data-level="Fluent" tabindex="0" role="button" aria-label="HTML — fluent" transform="translate(90,200)"><circle class="star__halo" r="14"/><circle class="star__core" r="5"/></g>
-            <g class="star" data-c="frontend" data-skill="CSS" data-level="Wizard-grade" tabindex="0" role="button" aria-label="CSS — wizard grade" transform="translate(150,130)"><circle class="star__halo" r="16"/><circle class="star__core" r="6"/></g>
-            <g class="star" data-c="frontend" data-skill="JavaScript" data-level="Daily driver" tabindex="0" role="button" aria-label="JavaScript — daily driver" transform="translate(250,90)"><circle class="star__halo" r="18"/><circle class="star__core" r="7"/></g>
-            <g class="star" data-c="frontend" data-skill="TypeScript" data-level="Strongly typed" tabindex="0" role="button" aria-label="TypeScript — strongly typed" transform="translate(330,150)"><circle class="star__halo" r="16"/><circle class="star__core" r="6"/></g>
-            <g class="star" data-c="frontend" data-skill="React" data-level="Advanced" tabindex="0" role="button" aria-label="React — advanced" transform="translate(260,210)"><circle class="star__halo" r="16"/><circle class="star__core" r="6"/></g>
+    <!-- ════════════════════ FAQ ════════════════════ -->
+    <section class="section section--narrow" id="faq">
+      <header class="section__head section__head--center" data-reveal>
+        <p class="eyebrow">FAQ</p>
+        <h2 class="section__title"><em>Questions,</em> answered.</h2>
+      </header>
 
-            <g class="star" data-c="backend" data-skill="Node.js" data-level="Advanced" tabindex="0" role="button" aria-label="Node.js — advanced" transform="translate(480,120)"><circle class="star__halo" r="16"/><circle class="star__core" r="6"/></g>
-            <g class="star" data-c="backend" data-skill="APIs" data-level="REST &amp; GraphQL" tabindex="0" role="button" aria-label="APIs — REST and GraphQL" transform="translate(570,90)"><circle class="star__halo" r="14"/><circle class="star__core" r="5"/></g>
-            <g class="star" data-c="backend" data-skill="PostgreSQL" data-level="Comfortable" tabindex="0" role="button" aria-label="PostgreSQL — comfortable" transform="translate(640,170)"><circle class="star__halo" r="14"/><circle class="star__core" r="5"/></g>
-            <g class="star" data-c="backend" data-skill="Python" data-level="Comfortable" tabindex="0" role="button" aria-label="Python — comfortable" transform="translate(600,260)"><circle class="star__halo" r="14"/><circle class="star__core" r="5"/></g>
-            <g class="star" data-c="backend" data-skill="Docker" data-level="Ship-ready" tabindex="0" role="button" aria-label="Docker — ship ready" transform="translate(490,230)"><circle class="star__halo" r="12"/><circle class="star__core" r="4.5"/></g>
+      <div class="faq" data-reveal>
+        <details class="faq__item">
+          <summary>
+            <span>Do you design <i>and</i> develop?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>Yes — that’s the whole point. One person from first sketch to deployed site means nothing gets lost in translation, and the design is never something the code “tries” to match. It just is.</p>
+        </details>
+        <details class="faq__item">
+          <summary>
+            <span>How fast will I see results?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>First designs usually land within a week of kickoff. A typical marketing site ships in 3–5 weeks; bigger products in phases. On retainer, requests average a 48-hour turnaround.</p>
+        </details>
+        <details class="faq__item">
+          <summary>
+            <span>What’s your stack?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>TypeScript, React/Next.js and Node.js where they earn their keep — and zero-dependency, hand-written HTML/CSS/JS where they don’t. This site is the latter: view source, it’s all there.</p>
+        </details>
+        <details class="faq__item">
+          <summary>
+            <span>How many requests can I make on retainer?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>Queue up as many as you like; I work through them one at a time with full focus. Most clients ship 6–10 meaningful pieces a month this way.</p>
+        </details>
+        <details class="faq__item">
+          <summary>
+            <span>Can I pause the retainer?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>Anytime. Billing cycles pause with you and unused days roll over. No lock-in, no awkward email required — one click in your dashboard.</p>
+        </details>
+        <details class="faq__item">
+          <summary>
+            <span>Where are you based — and the name “Viktor”?</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <p>Earth, CET timezone, fully remote. And yes — just Viktor. Like Madonna, but with more semicolons.</p>
+        </details>
+      </div>
+    </section>
 
-            <g class="star" data-c="craft" data-skill="Git" data-level="Time traveler" tabindex="0" role="button" aria-label="Git — time traveler" transform="translate(220,380)"><circle class="star__halo" r="14"/><circle class="star__core" r="5"/></g>
-            <g class="star" data-c="craft" data-skill="Testing" data-level="Trust but verify" tabindex="0" role="button" aria-label="Testing — trust but verify" transform="translate(320,440)"><circle class="star__halo" r="12"/><circle class="star__core" r="4.5"/></g>
-            <g class="star" data-c="craft" data-skill="Accessibility" data-level="For everyone" tabindex="0" role="button" aria-label="Accessibility — for everyone" transform="translate(430,400)"><circle class="star__halo" r="14"/><circle class="star__core" r="5.5"/></g>
-            <g class="star" data-c="craft" data-skill="Performance" data-level="Milliseconds matter" tabindex="0" role="button" aria-label="Performance — milliseconds matter" transform="translate(530,450)"><circle class="star__halo" r="14"/><circle class="star__core" r="5.5"/></g>
-            <g class="star" data-c="craft" data-skill="Figma" data-level="Design-fluent" tabindex="0" role="button" aria-label="Figma — design fluent" transform="translate(250,480)"><circle class="star__halo" r="12"/><circle class="star__core" r="4.5"/></g>
-          </g>
-        </svg>
-
-        <div class="skymap__tooltip" id="skyTooltip" role="status" aria-live="polite" hidden>
-          <strong id="skyTooltipName"></strong><span id="skyTooltipLevel"></span>
+    <!-- ════════════════════ BIG CTA ════════════════════ -->
+    <section class="section section--cta" id="contact">
+      <div class="cta" data-reveal>
+        <div class="cta__body">
+          <h2 class="cta__title">Got an idea?<br><em>Let’s make it real.</em></h2>
+          <p class="cta__sub">One quick email is all it takes. I read everything myself and reply within a day.</p>
+          <div class="cta__actions">
+            <button class="btn btn--white" id="copyEmail" data-copy-email data-email="hello@viktor.dev" data-magnetic>
+              <span class="btn__label">hello@viktor.dev</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2M4 8h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="visually-hidden">Copy email address</span>
+            </button>
+          </div>
+          <ul class="cta__socials">
+            <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-magnetic>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+            </a></li>
+            <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-magnetic>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 3.5A2 2 0 1 1 4.4 7.4a2 2 0 0 1 .1-4ZM3 9h3.1v12H3Zm5.8 0H12v1.6h.1a3.4 3.4 0 0 1 3-1.7c3.3 0 3.9 2.2 3.9 5V21h-3.1v-5.4c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H8.8Z"/></svg>
+            </a></li>
+            <li><a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter" data-magnetic>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 3H21l-7.3 8.3L22.2 21h-6.7l-5.2-6.2L4.3 21H1l7.8-8.9L1.5 3h6.9l4.7 5.7Zm-1.2 16h1.9L6.9 4.9H4.9Z"/></svg>
+            </a></li>
+          </ul>
         </div>
 
-        <ul class="skymap__legend" id="skyLegend">
-          <li><button class="chip" data-skill="HTML">HTML</button></li>
-          <li><button class="chip" data-skill="CSS">CSS</button></li>
-          <li><button class="chip" data-skill="JavaScript">JavaScript</button></li>
-          <li><button class="chip" data-skill="TypeScript">TypeScript</button></li>
-          <li><button class="chip" data-skill="React">React</button></li>
-          <li><button class="chip" data-skill="Node.js">Node.js</button></li>
-          <li><button class="chip" data-skill="APIs">APIs</button></li>
-          <li><button class="chip" data-skill="PostgreSQL">PostgreSQL</button></li>
-          <li><button class="chip" data-skill="Python">Python</button></li>
-          <li><button class="chip" data-skill="Docker">Docker</button></li>
-          <li><button class="chip" data-skill="Git">Git</button></li>
-          <li><button class="chip" data-skill="Testing">Testing</button></li>
-          <li><button class="chip" data-skill="Accessibility">Accessibility</button></li>
-          <li><button class="chip" data-skill="Performance">Performance</button></li>
-          <li><button class="chip" data-skill="Figma">Figma</button></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ════════════════════ JOURNEY ════════════════════ -->
-    <section class="section" id="journey">
-      <header class="section__head" data-reveal>
-        <p class="section__eyebrow"><span>04</span> Flight log</p>
-        <h2 class="section__title">The journey<br>so far</h2>
-      </header>
-
-      <div class="timeline" id="timeline">
-        <svg class="timeline__svg" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 60 1000">
-          <path class="timeline__track" d="M30 0 C 50 125, 10 250, 30 375 C 50 500, 10 625, 30 750 C 45 845, 30 920, 30 1000" fill="none"/>
-          <path class="timeline__draw" id="timelineDraw" d="M30 0 C 50 125, 10 250, 30 375 C 50 500, 10 625, 30 750 C 45 845, 30 920, 30 1000" fill="none"/>
-          <g class="timeline__comet" id="timelineComet"><circle r="6"/><circle r="14"/></g>
-        </svg>
-
-        <ol class="timeline__list">
-          <li class="timeline__item" data-reveal>
-            <span class="timeline__year">Now</span>
-            <h3 class="timeline__role">Independent developer &amp; designer</h3>
-            <p class="timeline__desc">Building sites and products for clients who want their corner of the internet to feel special. Open for new missions.</p>
-          </li>
-          <li class="timeline__item" data-reveal>
-            <span class="timeline__year">2023 — 2025</span>
-            <h3 class="timeline__role">Frontend developer · product studio</h3>
-            <p class="timeline__desc">Shipped dashboards, marketing sites, and design systems. Learned that the best feature is the one users never have to think about.</p>
-          </li>
-          <li class="timeline__item" data-reveal>
-            <span class="timeline__year">2021 — 2023</span>
-            <h3 class="timeline__role">Junior developer · agency orbit</h3>
-            <p class="timeline__desc">Survived deadline season, fell in love with CSS, and discovered that “it works on my machine” is not a deployment strategy.</p>
-          </li>
-          <li class="timeline__item" data-reveal>
-            <span class="timeline__year">2020</span>
-            <h3 class="timeline__role">First “Hello, World”</h3>
-            <p class="timeline__desc">Wrote one line of code. Broke three things. Got hooked instantly — been launching things ever since.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ════════════════════ CONTACT ════════════════════ -->
-    <section class="section section--contact" id="contact">
-      <div class="contact" data-reveal>
-        <svg class="contact__signal" viewBox="0 0 200 120" aria-hidden="true">
-          <circle class="signal__ring signal__ring--1" cx="100" cy="110" r="30"/>
-          <circle class="signal__ring signal__ring--2" cx="100" cy="110" r="58"/>
-          <circle class="signal__ring signal__ring--3" cx="100" cy="110" r="86"/>
-          <circle class="signal__dot" cx="100" cy="110" r="6"/>
-        </svg>
-
-        <p class="contact__eyebrow"><span>05</span> Contact</p>
-        <h2 class="contact__title">Got an idea?<br><em>Let’s make it real.</em></h2>
-        <p class="contact__sub">Currently available for freelance and full-time missions.<br>The fastest way to reach me:</p>
-
-        <button class="btn btn--primary btn--big" id="copyEmail" data-magnetic data-email="hello@viktor.dev">
-          <span class="btn__label">hello@viktor.dev</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2M4 8h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="visually-hidden">Copy email address</span>
-        </button>
-
-        <ul class="contact__socials">
-          <li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" data-magnetic>GitHub</a></li>
-          <li><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" data-magnetic>LinkedIn</a></li>
-          <li><a href="https://x.com/" target="_blank" rel="noopener noreferrer" data-magnetic>X / Twitter</a></li>
-        </ul>
+        <aside class="cta__card" aria-label="Availability">
+          <p class="cta__card-row cta__card-row--status"><span class="status-dot" aria-hidden="true"></span><span><strong>Available</strong> for new projects</span></p>
+          <hr>
+          <p class="cta__card-row"><span class="cta__card-k">Response time</span><span class="cta__card-v">&lt; 24 hours</span></p>
+          <p class="cta__card-row"><span class="cta__card-k">Next opening</span><span class="cta__card-v">July 2026</span></p>
+          <p class="cta__card-row"><span class="cta__card-k">Timezone</span><span class="cta__card-v">CET · Earth</span></p>
+          <hr>
+          <p class="cta__card-note">No forms, no funnels — just email a human.</p>
+        </aside>
       </div>
     </section>
   </main>
 
   <!-- ════════════════════ FOOTER ════════════════════ -->
   <footer class="footer">
-    <p class="footer__made">Designed &amp; hand-coded by <strong>Viktor</strong> — no frameworks, no templates, just craft.</p>
-    <p class="footer__meta"><span id="year">2026</span> · Made on Earth · <button class="footer__konami" id="konamiHint" title="↑ ↑ ↓ ↓ ← → ← → B A">psst, try the Konami code</button></p>
+    <p>Designed &amp; hand-coded by <strong>Viktor</strong> — no frameworks, just craft.</p>
+    <p class="footer__meta"><span id="year">2026</span> · Made on Earth ·
+      <button class="footer__konami" id="konamiHint" title="↑ ↑ ↓ ↓ ← → ← → B A">psst, try the Konami code</button>
+    </p>
   </footer>
 
   <!-- Back to top rocket -->

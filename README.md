@@ -1,39 +1,57 @@
 # Viktor · Portfolio
 
 A hand-built personal portfolio. **Zero frameworks, zero build steps, zero dependencies** —
-just three files of carefully crafted HTML, CSS, and vanilla JavaScript.
+three files of carefully crafted HTML, CSS, and vanilla JavaScript.
+
+Warm editorial design: ink on white, burnt-orange accent (`#E34400`), Satoshi + Instrument
+Serif, hairline borders, dot-grid textures — with a full dark mode and the interactive
+craft to match.
 
 ## ✦ What's inside
 
 | Feature | Where |
 |---|---|
-| Living starfield — parallax depth, twinkling, shooting stars | canvas `#sky`, `script.js` → *starfield* |
-| Day / night theme — morphing sun ⇄ moon, circular reveal (View Transitions API) | `#themeToggle` |
-| Skills constellation — interactive SVG star map (hover, tap, keyboard) | `#skills` |
+| Light / dark theme — morphing sun ⇄ moon, circular reveal (View Transitions API) | `#themeToggle` |
+| Hero word rotator set in Instrument Serif italic (*alive. fast. human. fun.*) | `.rotator` |
+| Auto-scrolling work strip + trusted-by wordmark row | `.strip`, `.logos` |
+| Service intro with tilted, color-dotted tag pills | `#services` |
+| Per-project animated SVG illustrations (cart drives by, charts draw, chat types, rain falls) | `#work` |
+| Tilted process cards with checklist / task-board / rocket vignettes and orange squiggle connectors | `#process` |
+| Testimonials, About with career table & count-up stats | `#testimonials`, `#about` |
 | Astronaut that draws itself in and follows your cursor with its eyes | `#about` |
-| Per-project animated SVG illustrations | `#work` |
-| Flight-log timeline whose path draws as you scroll, with a comet tracker | `#journey` |
-| Magnetic buttons, 3D-tilt cards, custom cursor (desktop only) | `script.js` |
+| Project + retainer pricing cards (featured dark card, availability dot) | `#pricing` |
+| FAQ accordion — native `<details>`, one open at a time, rotating plus icon | `#faq` |
+| Big orange CTA with copy-to-clipboard email + availability card | `#contact` |
+| Starfield canvas — subtle ambience in dark mode | canvas `#sky` |
 | Konami code easter egg → warp drive (`↑ ↑ ↓ ↓ ← → ← → B A`) | try it |
+| Magnetic buttons, 3D-tilt cards, custom cursor (desktop only) | `script.js` |
 | "Lost in space" 404 page | `404.html` |
 
-Mobile-first and fully responsive (tested at 360 / 390 / 768 / 1440 px), honors
-`prefers-reduced-motion`, keyboard-accessible, self-hosted variable font (one 22 KB file),
-no external requests at all.
+Mobile-first and fully responsive (tested at 390 / 768 / 1440 px), honors
+`prefers-reduced-motion`, keyboard-accessible, self-hosted fonts, no external requests.
 
 ## ✏️ Make it yours
 
 All content lives in `index.html` — search for these and replace:
 
-1. **Email** — `hello@viktor.dev` (appears in the contact button `data-email`, the mobile
-   menu footer, and the console message in `script.js`).
-2. **Social links** — the `contact__socials` list (GitHub / LinkedIn / X point at homepages
-   for now).
-3. **Projects** — four `<article class="project">` blocks: name, description, tags, links.
-4. **Experience** — the `timeline__list` entries in `#journey`.
+1. **Email** — `hello@viktor.dev` (CTA button + pricing row `data-email`, mobile menu
+   footer, and the console message in `script.js`).
+2. **Social links** — the `cta__socials` list (GitHub / LinkedIn / X point at homepages).
+3. **Projects** — four `<article class="project">` blocks, plus the matching `.strip__card`
+   marquee tiles.
+4. **Experience** — the `.career` rows in `#about`.
 5. **About copy & stats** — `#about` paragraphs and the `data-count-to` numbers.
-6. **Skills** — stars in the `#skymapSvg` map (`data-skill`, `data-level`) and the matching
-   legend chips. Star size = `r` on `star__core`/`star__halo`.
+6. **Pricing** — the two `.plan` cards in `#pricing`.
+7. **FAQ** — the `details.faq__item` blocks.
+
+## 🔤 Fonts
+
+Self-hosted in `fonts/` (no external requests):
+
+- **Satoshi** (variable 300–900) — via [Fontshare](https://www.fontshare.com/fonts/satoshi),
+  free for personal & commercial use under the ITF Free Font License.
+- **Instrument Serif** (regular + italic) — [Google Fonts](https://fonts.google.com/specimen/Instrument+Serif),
+  SIL Open Font License.
 
 ## 🚀 Deploy (GitHub Pages)
 
